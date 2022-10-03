@@ -1,0 +1,37 @@
+
+# to run the code: https://replit.com/@MahdyZ7/Thorlabs-lens
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.linspace(-1, 1, 1_000_000)
+# y = np.sqrt(1 - x**2 / 3.3)
+# y = np.sqrt(1 - x**2 / 4.41)
+# phase shift
+#δ = 2π(n2 - n1)t/λ
+# n2 = 1.5168 n1 = 1 λ= 587.6 nm default
+# n2 = 1.5131 n1 = 1 λ= 700 nm red
+# n2 = 1.5185 n1 = 1 λ= 550 nm green
+n = 1.5168 - 1
+wavlen = (587.6 * 10**-9)
+y = 2 * np.pi * n * np.sqrt(1 - x**2 / 3.3) / wavlen
+
+# a phase multiplier is used to avoid diffraction grating instead of 2pi
+phase_x = 16384 # 2^14
+for i in range(len(y)):
+	# reduce phase
+	y[i] = y[i] - (phase_x * np.pi * np.floor(y[i]/(phase_x * np.pi)))
+	# calculate new thicknes
+	y[i] = y[i] * wavlen / (2 * np.pi * 0.5168)
+
+
+print(y)
+plt.plot(x, y)
+plt.title('Lens Cross Section')
+plt.xlabel('Radius (r)')
+plt.ylabel('lens hight (mm)')
+
+# plt.plot(x, -y)
+# plt.ylim(-1, 1)
+
+plt.show()
